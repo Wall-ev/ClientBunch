@@ -11,7 +11,8 @@
     "fd.youkaishc.KettleBlockAccessor",
     "letsdo.vinery.FermentationBarrelBlockEntityMixin",
     "other.drinkbeer.BeerBarrelBlockEntityMixin",
-    "vanilla.AbstractFurnaceBlockEntityMixin"
+    "vanilla.AbstractFurnaceBlockEntityMixin",
+    "vanilla.ItemMixinAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
