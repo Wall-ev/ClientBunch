@@ -11,10 +11,14 @@
     "fd.youkaishc.KettleBlockAccessor",
     "letsdo.vinery.FermentationBarrelBlockEntityMixin",
     "other.drinkbeer.BeerBarrelBlockEntityMixin",
+    "other.sawmill.SawmillMenuMixin",
     "vanilla.AbstractFurnaceBlockEntityMixin",
     "vanilla.ItemMixinAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "other.sawmill.SawmillScreenMixin"
+  ]
 }
