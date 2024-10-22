@@ -43,8 +43,8 @@ public class FoodEffectTooltipRenderer implements ClientTooltipComponent {
   @Override
   public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics graphics) {
     Minecraft minecraft = Minecraft.getInstance();
-    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+//    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     for (int i = 0; i < component.effects().size(); i++) {
       MobEffectInstance effect = component.effects().get(i).getFirst();
       renderEffectIcon(x, y + getSpacing() * i, graphics, minecraft, effect);

@@ -7,24 +7,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-public class MobEffectTooltipRenderer implements ClientTooltipComponent {
-    private final MobEffectTooltipComponent effectTooltipComponent;
+public class IconTooltipRenderer implements ClientTooltipComponent {
+    private final IconTooltipComponent iconTooltipComponent;
     private final int imageOffsetX;
     private final int textOffsetX;
 
-    public MobEffectTooltipRenderer(MobEffectTooltipComponent effectTooltipComponent) {
-        this.effectTooltipComponent = effectTooltipComponent;
+    public IconTooltipRenderer(IconTooltipComponent iconTooltipComponent) {
+        this.iconTooltipComponent = iconTooltipComponent;
         int[] offsetX = getOffsetX();
         this.imageOffsetX = offsetX[0];
         this.textOffsetX = offsetX[1];
@@ -32,7 +27,7 @@ public class MobEffectTooltipRenderer implements ClientTooltipComponent {
 
     private int[] getOffsetX() {
         Minecraft mc = Minecraft.getInstance();
-        MutableComponent description = effectTooltipComponent.mutableComponent();
+        MutableComponent description = iconTooltipComponent.mutableComponent();
 
         String string = description.getString();
         int spaceCount = 0;
@@ -51,9 +46,9 @@ public class MobEffectTooltipRenderer implements ClientTooltipComponent {
             }
 
             int offsetX = mc.font.width(CommonComponents.SPACE.getString().repeat(spaceCount));
-            return new int[]{offsetX, offsetX + 10 - a1};
+            return new int[]{offsetX, offsetX + 40 - a1};
         } else {
-            return new int[]{0, 10};
+            return new int[]{0, 40};
         }
     }
 
@@ -64,29 +59,18 @@ public class MobEffectTooltipRenderer implements ClientTooltipComponent {
 
     @Override
     public int getWidth(@NotNull Font font) {
-        return font.width(effectTooltipComponent.mutableComponent()) + 9 + 2;
+        return font.width(iconTooltipComponent.mutableComponent()) + 40 + 2;
     }
 
     @Override
     public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics graphics) {
-        Minecraft minecraft = Minecraft.getInstance();
-//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-//        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        renderEffectIcon(x + imageOffsetX, y + 1, graphics, minecraft, effectTooltipComponent.mobEffect());
-    }
-
-    private void renderEffectIcon(
-            int x, int y, @NotNull GuiGraphics graphics, Minecraft minecraft, MobEffect mobeffect) {
-        MobEffectTextureManager textureManager = minecraft.getMobEffectTextures();
-        ResourceLocation key = ForgeRegistries.MOB_EFFECTS.getKey(mobeffect);
-        TextureAtlasSprite sprite1 = textureManager.getSprite(key);
-        graphics.blit(x, y, 0, 9, 9, sprite1);
+        graphics.blit(iconTooltipComponent.resourceLocation(), x + imageOffsetX, y + 1, 0, 0, 40, 9, 256, 256);
     }
 
     @Override
     public void renderText(
             @NotNull Font font, int x, int y, @NotNull Matrix4f matrix, @NotNull BufferSource buffer) {
-        MutableComponent description = effectTooltipComponent.mutableComponent();
+        MutableComponent description = iconTooltipComponent.mutableComponent();
         int color = description.getStyle().getColor() == null ? 0xAABBCC : description.getStyle().getColor().getValue();
         font.drawInBatch(description, x + textOffsetX, y + 1, color, true, matrix, buffer, Font.DisplayMode.NORMAL, 0, 15728880);
     }

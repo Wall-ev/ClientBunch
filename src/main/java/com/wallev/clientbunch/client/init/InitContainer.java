@@ -1,10 +1,7 @@
 package com.wallev.clientbunch.client.init;
 
 import com.wallev.clientbunch.ClientBunch;
-import com.wallev.clientbunch.inventory.tooltip.FoodEffectTooltipComponent;
-import com.wallev.clientbunch.inventory.tooltip.FoodEffectTooltipRenderer;
-import com.wallev.clientbunch.inventory.tooltip.MobEffectTooltipComponent;
-import com.wallev.clientbunch.inventory.tooltip.MobEffectTooltipRenderer;
+import com.wallev.clientbunch.inventory.tooltip.*;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,5 +15,6 @@ public final class InitContainer {
     public static void registerTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(FoodEffectTooltipComponent.class, FoodEffectTooltipRenderer::new);
         event.register(MobEffectTooltipComponent.class, MobEffectTooltipRenderer::new);
+        event.register(IconTooltipComponent.class, IconTooltipRenderer::new);
     }
 }

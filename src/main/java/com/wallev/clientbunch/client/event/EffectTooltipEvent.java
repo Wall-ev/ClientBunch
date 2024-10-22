@@ -3,15 +3,21 @@ package com.wallev.clientbunch.client.event;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.wallev.clientbunch.ClientBunch;
+import com.wallev.clientbunch.client.IconType;
 import com.wallev.clientbunch.inventory.tooltip.FoodEffectTooltipComponent;
+import com.wallev.clientbunch.inventory.tooltip.IconTooltipComponent;
 import com.wallev.clientbunch.inventory.tooltip.MobEffectTooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -21,10 +27,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -38,6 +41,16 @@ public final class EffectTooltipEvent {
         ItemStack itemStack = event.getItemStack();
 
         List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
+
+        if (!itemStack.isEmpty()) {
+            Optional<FormattedText> left = tooltipElements.get(0).left();
+            if (left.isPresent() && left.get() instanceof MutableComponent mutableComponent) {
+                ResourceLocation resourceLocation = getResourceLocation(itemStack);
+                if (resourceLocation != null) {
+                    tooltipElements.set(0, Either.right(new IconTooltipComponent(resourceLocation, mutableComponent)));
+                }
+            }
+        }
 
         HashMap<Integer, MutableComponent> integerFormattedTextHashMap = new HashMap<>();
         int i = 0;
@@ -77,6 +90,16 @@ public final class EffectTooltipEvent {
             Collection<MutableComponent> values = integerFormattedTextHashMap.values();
             tooltipElements.removeIf(tooltipElements1 -> tooltipElements1.left().isPresent() && values.contains(tooltipElements1.left().get()));
         }
+    }
+
+    @Nullable
+    private static ResourceLocation getResourceLocation(ItemStack stack) {
+        Item item = stack.getItem();
+        if (item instanceof ArmorItem armorItem && armorItem.getMaterial() instanceof ArmorMaterials armorMaterials) {
+            String name = armorMaterials.getName();
+            return IconType.getIconTypeRes(name);
+        }
+        return null;
     }
 
     @Nullable
