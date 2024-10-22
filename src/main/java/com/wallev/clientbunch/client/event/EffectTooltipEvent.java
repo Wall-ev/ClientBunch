@@ -85,10 +85,8 @@ public final class EffectTooltipEvent {
         } else {
             for (Map.Entry<Integer, MutableComponent> entry : integerFormattedTextHashMap.entrySet()) {
                 MutableComponent value = entry.getValue();
-                tooltipElements.add(entry.getKey(), Either.right(new MobEffectTooltipComponent(getEffectMobEffect(getEffectKey(value.toString())), value)));
+                tooltipElements.set(entry.getKey(), Either.right(new MobEffectTooltipComponent(getEffectMobEffect(getEffectKey(value.toString())), value)));
             }
-            Collection<MutableComponent> values = integerFormattedTextHashMap.values();
-            tooltipElements.removeIf(tooltipElements1 -> tooltipElements1.left().isPresent() && values.contains(tooltipElements1.left().get()));
         }
     }
 
