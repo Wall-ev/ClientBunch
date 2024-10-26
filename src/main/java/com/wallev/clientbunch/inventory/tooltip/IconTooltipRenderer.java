@@ -64,7 +64,12 @@ public class IconTooltipRenderer implements ClientTooltipComponent {
 
     @Override
     public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics graphics) {
-        graphics.blit(iconTooltipComponent.resourceLocation(), x + imageOffsetX, y + 1, 0, 0, 40, 9, 256, 256);
+        final int x1 = x + imageOffsetX, y1 = y + 1;
+        final float scale = 0.75f;
+        graphics.pose().pushPose();
+        graphics.pose().scale(scale, scale, scale);
+        graphics.blit(iconTooltipComponent.resourceLocation(), (int) (x1 / scale), (int) (y1 / scale), 0, 0, 40, 9, 256, 256);
+        graphics.pose().popPose();
     }
 
     @Override

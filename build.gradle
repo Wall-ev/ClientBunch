@@ -13,6 +13,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -201,6 +202,9 @@ dependencies {
     implementation fg.deobf("curse.maven:drink-beer-refill-729120:${drink_beer_refill_file_id}")
 
     implementation fg.deobf("curse.maven:create-328085:${create_file_id}")
+
+    implementation fg.deobf("curse.maven:puzzles-lib-495476:5783607")
+    implementation fg.deobf("curse.maven:new-effect-descriptions-891326:4706348")
 
 
 //    implementation fg.deobf("maven.modrinth:expanded-storage:10.0.0-beta.3+forge")

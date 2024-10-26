@@ -43,13 +43,13 @@ public final class EffectTooltipEvent {
         List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
 
         if (!itemStack.isEmpty()) {
-            Optional<FormattedText> left = tooltipElements.get(0).left();
-            if (left.isPresent() && left.get() instanceof MutableComponent mutableComponent) {
-                ResourceLocation resourceLocation = getResourceLocation(itemStack);
-                if (resourceLocation != null) {
-                    tooltipElements.set(0, Either.right(new IconTooltipComponent(resourceLocation, mutableComponent)));
-                }
-            }
+//            Optional<FormattedText> left = tooltipElements.get(0).left();
+//            if (left.isPresent() && left.get() instanceof MutableComponent mutableComponent) {
+//                ResourceLocation resourceLocation = getResourceLocation(itemStack);
+//                if (resourceLocation != null) {
+//                    tooltipElements.set(0, Either.right(new IconTooltipComponent(resourceLocation, mutableComponent)));
+//                }
+//            }
         }
 
         HashMap<Integer, MutableComponent> integerFormattedTextHashMap = new HashMap<>();
@@ -111,7 +111,8 @@ public final class EffectTooltipEvent {
     }
 
     private static String getEffectKey(String input) {
-        List<MatchResult> results = Pattern.compile("effect\\.(\\w+)\\.(\\w+)").matcher(input).results().toList();
+//        List<MatchResult> results = Pattern.compile("effect\\.(\\w+)\\.(\\w+)").matcher(input).results().toList();
+        List<MatchResult> results = Pattern.compile("effect\\.(?!(\\w+)\\.(\\w+\\.desc))(\\w+)\\.(\\w+)").matcher(input).results().toList();
         return results.isEmpty() ? StringUtils.EMPTY : results.get(0).group();
     }
 }
