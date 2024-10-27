@@ -184,7 +184,9 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:kiwi-303657:${kiwi_file_id}")
 
 //    implementation fg.deobf("curse.maven:quark-243121:${quark_file_id}")
-//    implementation fg.deobf("curse.maven:citadel-331936:${citadel_file_id}")
+    runtimeOnly fg.deobf("curse.maven:quark-243121:5594847")
+    runtimeOnly fg.deobf("curse.maven:zeta-968868:5597406")
+    //    implementation fg.deobf("curse.maven:citadel-331936:${citadel_file_id}")
 
     implementation fg.deobf("curse.maven:farmers-delight-398521:${farmers_delight_file_id}")
     implementation fg.deobf("curse.maven:miners-delight-plus-689630:${miners_delight_plus_file_id}")
@@ -207,6 +209,8 @@ dependencies {
     implementation fg.deobf("curse.maven:new-effect-descriptions-891326:4706348")
 
 
+    implementation fg.deobf("curse.maven:appleskin-248787:4770828")
+//    implementation fg.deobf("maven.modrinth:appleskin:xcauwnEB")
 //    implementation fg.deobf("maven.modrinth:expanded-storage:10.0.0-beta.3+forge")
 //    implementation fg.deobf("curse.maven:serene-seasons-291874:4761603")
 //    implementation fg.deobf("curse.maven:spice-of-life-carrot-edition-277616:4650707")
@@ -221,6 +225,8 @@ dependencies {
     implementation fg.deobf("curse.maven:vinery-704465:${vinery_file_id}")
     implementation fg.deobf("curse.maven:do-api-864599:${do_api_file_id}")
 //    implementation fg.deobf("curse.maven:fruit-stack-900231:4807247")
+
+
 
 
 

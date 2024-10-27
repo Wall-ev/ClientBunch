@@ -1,4 +1,4 @@
-package com.wallev.clientbunch.inventory.tooltip;
+package com.wallev.clientbunch.client.tooltip;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;

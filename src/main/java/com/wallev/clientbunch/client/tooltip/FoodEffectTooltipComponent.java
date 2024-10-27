@@ -1,4 +1,4 @@
-package com.wallev.clientbunch.inventory.tooltip;
+package com.wallev.clientbunch.client.tooltip;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.effect.MobEffectInstance;

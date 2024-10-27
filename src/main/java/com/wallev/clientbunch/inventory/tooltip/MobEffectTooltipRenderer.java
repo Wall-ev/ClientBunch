@@ -1,11 +1,10 @@
 package com.wallev.clientbunch.inventory.tooltip;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.wallev.clientbunch.client.tooltip.MobEffectTooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
