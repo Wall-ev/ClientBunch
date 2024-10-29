@@ -30,12 +30,14 @@ public class FoodTooltipComponent implements TooltipComponent {
 
         hungerBars = (int) Math.ceil(Math.abs(biggestHunger) / 2f);
 //        if (hungerBars > 10) {
+//            hungerBarsText = "x" + ((biggestHunger < 0 ? -1 : 1) * hungerBars);
             hungerBarsText = "x" + ((biggestHunger < 0 ? -1 : 1) * hungerBars);
             hungerBars = 1;
 //        }
 
         saturationBars = (int) Math.ceil(Math.abs(biggestSaturationIncrement) / 2f);
 //        if (saturationBars > 10 || saturationBars == 0) {
+//            saturationBarsText = "x" + ((biggestSaturationIncrement < 0 ? -1 : 1) * saturationBars);
             saturationBarsText = "x" + ((biggestSaturationIncrement < 0 ? -1 : 1) * saturationBars);
             saturationBars = 1;
 //        }

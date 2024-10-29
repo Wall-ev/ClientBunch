@@ -18,6 +18,8 @@ import squeek.appleskin.helpers.FoodHelper;
 import squeek.appleskin.helpers.KeyHelper;
 import squeek.appleskin.helpers.TextureHelper;
 
+import java.awt.*;
+
 public class FoodTooltipComponentRenderer implements ClientTooltipComponent {
     private static final TextureOffsets rottenBarTextureOffsets = new TextureOffsets();
     private static final TextureOffsets normalBarTextureOffsets = new TextureOffsets();
@@ -112,19 +114,21 @@ public class FoodTooltipComponentRenderer implements ClientTooltipComponent {
         TextureOffsets offsets = FoodHelper.isRotten(itemStack, mc.player) ? rottenBarTextureOffsets : normalBarTextureOffsets;
         for (int i = 0; i < foodTooltip.getHungerBars() * 2; i += 2) {
 
-            if (modifiedHunger < 0)
-                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerNegativeHunger, 27, 9, 9, 256, 256);
-            else if (modifiedHunger > defaultHunger && defaultHunger <= i)
-                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerExtraHunger, 27, 9, 9, 256, 256);
-            else if (modifiedHunger > i + 1 || defaultHunger == modifiedHunger)
-                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerNormalHunger, 27, 9, 9, 256, 256);
-            else if (modifiedHunger == i + 1)
-                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerPartialHunger, 27, 9, 9, 256, 256);
-            else {
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, .5F);
-                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerMissingHunger, 27, 9, 9, 256, 256);
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            }
+//            if (modifiedHunger < 0)
+//            if (true)
+//                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerNegativeHunger, 27, 9, 9, 256, 256);
+//            else if (modifiedHunger > defaultHunger && defaultHunger <= i)
+//                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerExtraHunger, 27, 9, 9, 256, 256);
+//            else if (modifiedHunger > i + 1 || defaultHunger == modifiedHunger)
+//                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerNormalHunger, 27, 9, 9, 256, 256);
+//            else if (modifiedHunger == i + 1)
+//                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerPartialHunger, 27, 9, 9, 256, 256);
+//            else
+//            {
+//                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, .5F);
+//                guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, offsets.containerMissingHunger, 27, 9, 9, 256, 256);
+//                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//            }
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, .25F);
             guiGraphics.blit(TextureHelper.MC_ICONS, offsetX, offsetY, 0, defaultHunger - 1 == i ? offsets.shankMissingPartial : offsets.shankMissingFull, 27, 9, 9, 256, 256);
@@ -135,21 +139,16 @@ public class FoodTooltipComponentRenderer implements ClientTooltipComponent {
 
             offsetX -= 9;
         }
+
         if (foodTooltip.getHungerBarsText() != null) {
             offsetX += 18;
-            PoseStack poseStack = guiGraphics.pose();
-            poseStack.pushPose();
-            poseStack.translate(offsetX, offsetY, 0);
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-            guiGraphics.drawString(font, foodTooltip.getHungerBarsText(), 2, 2, 0xFFAAAAAA);
-            poseStack.popPose();
+            guiGraphics.drawString(font, foodTooltip.getHungerBarsText(), offsetX, offsetY, Color.WHITE.getRGB());
         }
 
         int saturationBarsWidth = foodTooltip.getSaturationBars() * 7;
         if (foodTooltip.getSaturationBarsText() != null)
             saturationBarsWidth += font.width(foodTooltip.getSaturationBarsText());
-        offsetX = x + 6 + saturationBarsWidth;
-//        offsetY += 10;
+        offsetX = x + 9 + saturationBarsWidth;
 
         float modifiedSaturationIncrement = modifiedFood.getSaturationIncrement();
         float absModifiedSaturationIncrement = Math.abs(modifiedSaturationIncrement);
@@ -173,13 +172,8 @@ public class FoodTooltipComponentRenderer implements ClientTooltipComponent {
             offsetX -= 7;
         }
         if (foodTooltip.getSaturationBarsText() != null) {
-            offsetX += 14;
-            PoseStack poseStack = guiGraphics.pose();
-            poseStack.pushPose();
-            poseStack.translate(offsetX, offsetY, 0);
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-            guiGraphics.drawString(font, foodTooltip.getSaturationBarsText(), 2, 1, 0xFFAAAAAA);
-            poseStack.popPose();
+            offsetX += 9 + 7;
+            guiGraphics.drawString(font, foodTooltip.getSaturationBarsText(), offsetX, offsetY, Color.WHITE.getRGB());
         }
 
         RenderSystem.disableBlend();

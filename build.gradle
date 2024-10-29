@@ -226,6 +226,13 @@ dependencies {
     implementation fg.deobf("curse.maven:do-api-864599:${do_api_file_id}")
 //    implementation fg.deobf("curse.maven:fruit-stack-900231:4807247")
 
+    compileOnly fg.deobf("curse.maven:obscure-tooltips-715660:4686579")
+    implementation fg.deobf("curse.maven:modern-ui-352491:5724639")
+
+    runtimeOnly fg.deobf("curse.maven:iceberg-520110:5838149")
+    runtimeOnly fg.deobf("curse.maven:prism-lib-638111:4650325")
+    compileOnly fg.deobf("curse.maven:legendary-tooltips-532127:4662781")
+
 
 
 
