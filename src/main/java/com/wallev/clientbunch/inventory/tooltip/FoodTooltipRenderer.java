@@ -1,7 +1,6 @@
 package com.wallev.clientbunch.inventory.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wallev.clientbunch.client.tooltip.FoodTooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -11,16 +10,14 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import squeek.appleskin.ModConfig;
 import squeek.appleskin.api.event.TooltipOverlayEvent;
 import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.helpers.FoodHelper;
-import squeek.appleskin.helpers.KeyHelper;
 import squeek.appleskin.helpers.TextureHelper;
 
 import java.awt.*;
 
-public class FoodTooltipComponentRenderer implements ClientTooltipComponent {
+public class FoodTooltipRenderer implements ClientTooltipComponent {
     private static final TextureOffsets rottenBarTextureOffsets = new TextureOffsets();
     private static final TextureOffsets normalBarTextureOffsets = new TextureOffsets();
 
@@ -50,7 +47,7 @@ public class FoodTooltipComponentRenderer implements ClientTooltipComponent {
 
     private FoodTooltipComponent foodTooltip;
 
-    public FoodTooltipComponentRenderer(FoodTooltipComponent foodTooltip) {
+    public FoodTooltipRenderer(FoodTooltipComponent foodTooltip) {
         this.foodTooltip = foodTooltip;
     }
 

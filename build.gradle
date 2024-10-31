@@ -137,6 +137,10 @@ repositories {
         dir 'libs'
     }
     maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+    maven {
         // location of the maven that hosts JEI files since January 2023
         // Patchouli
         name = "Jared's maven"
@@ -168,6 +172,10 @@ repositories {
         content {
             includeGroup "dev.latvian.mods"
         }
+    }
+
+    maven {
+        url "https://maven.shedaniel.me/"
     }
 }
 
@@ -229,8 +237,8 @@ dependencies {
     compileOnly fg.deobf("curse.maven:obscure-tooltips-715660:4686579")
     implementation fg.deobf("curse.maven:modern-ui-352491:5724639")
 
-    runtimeOnly fg.deobf("curse.maven:iceberg-520110:5838149")
-    runtimeOnly fg.deobf("curse.maven:prism-lib-638111:4650325")
+    implementation fg.deobf("curse.maven:iceberg-520110:5838149")
+    implementation fg.deobf("curse.maven:prism-lib-638111:4650325")
     compileOnly fg.deobf("curse.maven:legendary-tooltips-532127:4662781")
 
 
@@ -244,9 +252,20 @@ dependencies {
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+//     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
+
+    // rei
+    runtimeOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
+    implementation fg.deobf("curse.maven:architectury-api-419699:${architectury_api_id}")
+    implementation fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rei_version}")
+
+    // emi
+    // Forge (see below block as well if you use Forge Gradle)
+    compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}:api")
+    compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}")
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
