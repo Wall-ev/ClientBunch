@@ -54,8 +54,8 @@ public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMe
     @Shadow
     public abstract T getMenu();
 
-    @Inject(at = @At("TAIL"), method = "renderTooltip", remap = false)
-    public void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "renderTooltip", remap = true)
+    public void renderTooltip$client_bunch(GuiGraphics pGuiGraphics, int pX, int pY, CallbackInfo ci) {
 
         if (minecraft == null) return;
         if (!isKeyDown()) {

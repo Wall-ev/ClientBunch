@@ -2,6 +2,7 @@ package com.wallev.clientbunch.init;
 
 import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.event.FoodTooltipEvent;
+import com.wallev.clientbunch.client.event.ItemTooltipEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

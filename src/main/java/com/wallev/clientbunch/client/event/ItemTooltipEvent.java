@@ -2,29 +2,34 @@ package com.wallev.clientbunch.client.event;
 
 import com.mojang.datafixers.util.Either;
 import com.wallev.clientbunch.ClientBunch;
+import com.wallev.clientbunch.client.IconType;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.LineTooltipComponent;
+import com.wallev.clientbunch.handler.ItemType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = ClientBunch.MOD_ID, value = Dist.CLIENT)
 public final class ItemTooltipEvent {
-    private static final List<CreativeModeTab> TABS = BuiltInRegistries.CREATIVE_MODE_TAB.stream().toList();
     private static boolean compare = false;
     private static ItemStack comparedStack = ItemStack.EMPTY;
     private static ItemStack lastRenderStack = ItemStack.EMPTY;
@@ -104,34 +109,28 @@ public final class ItemTooltipEvent {
     }
 
     private static Component getSecondName(ItemStack stack) {
-        Minecraft mc = Minecraft.getInstance();
-
-        MutableComponent groupName = Component.empty();
-        Item item = stack.getItem();
-        if (item instanceof PotionItem) {
-            parseComponent(groupName, Component.literal("药水"));
-        }
-        if (item.getCraftingRemainingItem(stack).is(Items.GLASS_BOTTLE)) {
-            parseComponent(groupName, Component.literal("饮品"));
-        }
-        if (stack.getFoodProperties(mc.player) != null) {
-            parseComponent(groupName, Component.literal("食物"));
-        }
-
-        if (!groupName.equals(Component.empty())) {
-            return groupName.withStyle(ChatFormatting.BLUE);
-        } else {
-
-        }
-
-        for (CreativeModeTab creativemodetab : TABS) {
-            if (!creativemodetab.hasSearchBar() && creativemodetab.getDisplayItems().stream().anyMatch(stack1 -> stack1.is(item))) {
-                groupName = creativemodetab.getDisplayName().copy().withStyle(ChatFormatting.BLUE);
-                break;
-            }
-        }
-
-        return groupName;
+        return ItemType.getItemGroupName(stack);
+//        Minecraft mc = Minecraft.getInstance();
+//
+//        MutableComponent groupName = Component.empty();
+//        Item item = stack.getItem();
+//        if (item instanceof PotionItem) {
+//            parseComponent(groupName, Component.literal("药水"));
+//        }
+//        if (item.getCraftingRemainingItem(stack).is(Items.GLASS_BOTTLE)) {
+//            parseComponent(groupName, Component.literal("饮品"));
+//        }
+//        if (stack.getFoodProperties(mc.player) != null) {
+//            parseComponent(groupName, Component.literal("食物"));
+//        }
+//
+//        if (!groupName.equals(Component.empty())) {
+//            return groupName.withStyle(ChatFormatting.BLUE);
+//        } else {
+//
+//        }
+//
+//        return groupName;
     }
 
     public static boolean isCompare() {
