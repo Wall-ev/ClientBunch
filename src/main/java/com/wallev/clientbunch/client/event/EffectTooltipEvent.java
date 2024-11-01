@@ -50,6 +50,7 @@ public final class EffectTooltipEvent {
 //                    tooltipElements.set(0, Either.right(new IconTooltipComponent(resourceLocation, mutableComponent)));
 //                }
 //            }
+//            return;
         }
 
         HashMap<Integer, MutableComponent> integerFormattedTextHashMap = new HashMap<>();

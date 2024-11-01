@@ -27,6 +27,10 @@ import java.util.List;
 public final class FoodTooltipEvent {
     @SubscribeEvent
     public void gatherTooltips(RenderTooltipEvent.GatherComponents event) {
+        if (true) {
+//            return;
+        }
+
         if (event.isCanceled())
             return;
 

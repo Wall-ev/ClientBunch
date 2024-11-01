@@ -1,6 +1,7 @@
 package com.wallev.clientbunch.inventory.tooltip;
 
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -11,21 +12,25 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public class ItemTooltipRenderer implements ClientTooltipComponent {
+    public static final int DEFAULT_HEIGHT = 20 + 2 + 2 +2;
+    public static final int COMPAT_HEIGHT = DEFAULT_HEIGHT - Minecraft.getInstance().font.lineHeight - 1;
     private final ItemStack stack;
     private final Component name;
     private final Component secondName;
     private final float scale;
+    private final int height;
 
     public ItemTooltipRenderer(ItemTooltipComponent itemTooltipComponent) {
         this.stack = itemTooltipComponent.stack();
         this.name = itemTooltipComponent.name();
         this.secondName = itemTooltipComponent.secondName();
         this.scale = itemTooltipComponent.scale();
+        this.height = itemTooltipComponent.height();
     }
 
     @Override
     public int getHeight() {
-        return 20 + 2 + 2 + 2;
+        return height;
     }
 
     @Override

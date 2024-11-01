@@ -7,6 +7,7 @@ import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.LineTooltipComponent;
 import com.wallev.clientbunch.handler.ItemType;
 import com.wallev.clientbunch.inventory.tooltip.ArmorTooltipRenderer;
+import com.wallev.clientbunch.inventory.tooltip.ItemTooltipRenderer;
 import com.wallev.clientbunch.util.MouseHandlerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -72,8 +73,8 @@ public final class ItemTooltipEvent {
                 scale = tooltipSeconds < 0.25 ? (float) ((1.0F - Math.pow((1.0F - tooltipSeconds * 4.0F), 3.0)) * 1.5F) : (tooltipSeconds < 0.5 ? 1.5F - (1.0F - (float) Math.pow((1.0F - (tooltipSeconds - 0.25F) * 4.0F), 3.0)) * 0.25F : 1.25F);
             }
         }
-
-        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale)));
+        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.DEFAULT_HEIGHT)));
+//        tooltipElements.add(1, Either.left(Component.empty()));
     }
 
     /* LineTooltipComponent */
