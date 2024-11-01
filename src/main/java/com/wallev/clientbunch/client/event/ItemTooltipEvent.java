@@ -2,31 +2,30 @@ package com.wallev.clientbunch.client.event;
 
 import com.mojang.datafixers.util.Either;
 import com.wallev.clientbunch.ClientBunch;
-import com.wallev.clientbunch.client.IconType;
+import com.wallev.clientbunch.client.tooltip.ArmorTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.LineTooltipComponent;
 import com.wallev.clientbunch.handler.ItemType;
-import net.minecraft.ChatFormatting;
+import com.wallev.clientbunch.inventory.tooltip.ArmorTooltipRenderer;
+import com.wallev.clientbunch.util.MouseHandlerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = ClientBunch.MOD_ID, value = Dist.CLIENT)
 public final class ItemTooltipEvent {
@@ -74,29 +73,87 @@ public final class ItemTooltipEvent {
             }
         }
 
-        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, getSecondName(tooltipStack), scale)));
+        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale)));
     }
 
     /* LineTooltipComponent */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void addLineComponentTooltip(RenderTooltipEvent.GatherComponents event) {
+        ItemStack tooltipStack = event.getItemStack();
         List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
         if (tooltipElements.size() <= 1) return;
-        Font font = Minecraft.getInstance().font;
-        int width = 0;
-        for (Either<FormattedText, TooltipComponent> tooltipElement : tooltipElements) {
-
-            if (tooltipElement.left().isPresent()) {
-                width = Math.max(width, font.width(tooltipElement.left().get()));
-            }
-
-            if (tooltipElement.right().isPresent()) {
-                width = Math.max(width, ClientTooltipComponent.create(tooltipElement.right().get()).getWidth(font));
-            }
-
+        Minecraft mc = Minecraft.getInstance();
+        Font font = mc.font;
+        int guiScaledWidth = mc.getWindow().getGuiScaledWidth();
+        int width = 0, height = 0;
+        for (ClientTooltipComponent clientTooltipComponent : gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth)) {
+            width = Math.max(width, clientTooltipComponent.getWidth(font));
+            height += clientTooltipComponent.getHeight();
         }
 
-        tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
+        if (tooltipStack.getItem() instanceof Equipable equipable) {
+
+            if (height <= ArmorTooltipRenderer.HEIGHT) {
+                tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
+                tooltipElements.add(Either.right(new ArmorTooltipComponent(tooltipStack, height / 2, ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN, 0, width + (height / 2), 0)));
+            } else {
+                tooltipElements.add(1, Either.right(new LineTooltipComponent(ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN)));
+                tooltipElements.add(Either.right(new ArmorTooltipComponent(tooltipStack, ArmorTooltipRenderer.DEFAULT_SIZE, ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN, 0, width + ArmorTooltipRenderer.WIDTH / 2, (ArmorTooltipRenderer.HEIGHT - height) / 2)));
+            }
+        } else {
+            tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
+        }
+    }
+
+    private static List<ClientTooltipComponent> gatherTooltipComponents(RenderTooltipEvent.GatherComponents event, Font font, int mouseX, int screenWidth) {
+        // text wrapping
+        int tooltipTextWidth = event.getTooltipElements().stream()
+                .mapToInt(either -> either.map(font::width, component -> 0))
+                .max()
+                .orElse(0);
+
+        boolean needsWrap = false;
+
+        int tooltipX = mouseX + 12;
+        if (tooltipX + tooltipTextWidth + 4 > screenWidth) {
+            tooltipX = mouseX - 16 - tooltipTextWidth;
+            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
+            {
+                if (mouseX > screenWidth / 2)
+                    tooltipTextWidth = mouseX - 12 - 8;
+                else
+                    tooltipTextWidth = screenWidth - 16 - mouseX;
+                needsWrap = true;
+            }
+        }
+
+        if (event.getMaxWidth() > 0 && tooltipTextWidth > event.getMaxWidth()) {
+            tooltipTextWidth = event.getMaxWidth();
+            needsWrap = true;
+        }
+
+        int tooltipTextWidthF = tooltipTextWidth;
+        if (needsWrap) {
+            return event.getTooltipElements().stream()
+                    .flatMap(either -> either.map(
+                            text -> splitLine(text, font, tooltipTextWidthF),
+                            component -> Stream.of(ClientTooltipComponent.create(component))
+                    ))
+                    .toList();
+        }
+        return event.getTooltipElements().stream()
+                .map(either -> either.map(
+                        text -> ClientTooltipComponent.create(text instanceof Component ? ((Component) text).getVisualOrderText() : Language.getInstance().getVisualOrder(text)),
+                        ClientTooltipComponent::create
+                ))
+                .toList();
+    }
+
+    private static Stream<ClientTooltipComponent> splitLine(FormattedText text, Font font, int maxWidth) {
+        if (text instanceof Component component && component.getString().isEmpty()) {
+            return Stream.of(component.getVisualOrderText()).map(ClientTooltipComponent::create);
+        }
+        return font.split(text, maxWidth).stream().map(ClientTooltipComponent::create);
     }
 
     private static void parseComponent(MutableComponent original, MutableComponent... groupName) {
@@ -106,31 +163,6 @@ public final class ItemTooltipEvent {
             }
             original.append(mutableComponent);
         }
-    }
-
-    private static Component getSecondName(ItemStack stack) {
-        return ItemType.getItemGroupName(stack);
-//        Minecraft mc = Minecraft.getInstance();
-//
-//        MutableComponent groupName = Component.empty();
-//        Item item = stack.getItem();
-//        if (item instanceof PotionItem) {
-//            parseComponent(groupName, Component.literal("药水"));
-//        }
-//        if (item.getCraftingRemainingItem(stack).is(Items.GLASS_BOTTLE)) {
-//            parseComponent(groupName, Component.literal("饮品"));
-//        }
-//        if (stack.getFoodProperties(mc.player) != null) {
-//            parseComponent(groupName, Component.literal("食物"));
-//        }
-//
-//        if (!groupName.equals(Component.empty())) {
-//            return groupName.withStyle(ChatFormatting.BLUE);
-//        } else {
-//
-//        }
-//
-//        return groupName;
     }
 
     public static boolean isCompare() {

@@ -20,6 +20,7 @@ public final class InitContainer {
         event.register(IconTooltipComponent.class, IconTooltipRenderer::new);
         event.register(ItemTooltipComponent.class, ItemTooltipRenderer::new);
         event.register(LineTooltipComponent.class, LineTooltipRenderer::new);
+        event.register(ArmorTooltipComponent.class, ArmorTooltipRenderer::new);
         if (ModList.get().isLoaded("appleskin")) {
             event.register(FoodTooltipComponent.class, FoodTooltipRenderer::new);
         }
