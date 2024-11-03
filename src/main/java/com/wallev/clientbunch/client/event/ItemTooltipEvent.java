@@ -4,11 +4,12 @@ import com.mojang.datafixers.util.Either;
 import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.tooltip.ArmorTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
-import com.wallev.clientbunch.client.tooltip.LineTooltipComponent;
+import com.wallev.clientbunch.config.subconfig.RenderConfig;
 import com.wallev.clientbunch.handler.ItemType;
 import com.wallev.clientbunch.inventory.tooltip.ArmorTooltipRenderer;
 import com.wallev.clientbunch.inventory.tooltip.ItemTooltipRenderer;
 import com.wallev.clientbunch.util.MouseHandlerUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -16,6 +17,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
@@ -46,14 +48,48 @@ public final class ItemTooltipEvent {
         comparedStack = stack;
     }
 
-    @SubscribeEvent
-    public static void addItemRendererTooltip(RenderTooltipEvent.GatherComponents event) {
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void addItemTooltipRenderer(RenderTooltipEvent.GatherComponents event) {
         ItemStack tooltipStack = event.getItemStack();
-
         List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
 
-        if (tooltipStack.isEmpty()) return;
+        addItemIconTooltip(tooltipStack, tooltipElements, event);
+        addArmorTooltip(tooltipStack, tooltipElements, event);
+    }
 
+    private static void addArmorTooltip(ItemStack tooltipStack, List<Either<FormattedText, TooltipComponent>> tooltipElements, RenderTooltipEvent.GatherComponents event) {
+        if (!RenderConfig.ARMOR.get()) return;
+        if (tooltipStack.isEmpty() || !(tooltipStack.getItem() instanceof Equipable)) return;
+
+        if (tooltipElements.size() <= 1) return;
+        Minecraft mc = Minecraft.getInstance();
+        Font font = mc.font;
+        int guiScaledWidth = mc.getWindow().getGuiScaledWidth();
+        int width = 0, height = 0;
+        for (ClientTooltipComponent clientTooltipComponent : gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth)) {
+            width = Math.max(width, clientTooltipComponent.getWidth(font));
+            height += clientTooltipComponent.getHeight();
+        }
+
+        if (height <= ArmorTooltipRenderer.HEIGHT) {
+            tooltipElements.add(Either.right(new ArmorTooltipComponent(tooltipStack, height / 2, ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN, 0, width + (height / 2), 0)));
+        } else {
+            tooltipElements.add(Either.right(new ArmorTooltipComponent(tooltipStack, ArmorTooltipRenderer.DEFAULT_SIZE, ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN, 0, width + ArmorTooltipRenderer.WIDTH / 2, (ArmorTooltipRenderer.HEIGHT - height) / 2)));
+        }
+
+    }
+
+    private static void addItemIconTooltip(ItemStack tooltipStack, List<Either<FormattedText, TooltipComponent>> tooltipElements, RenderTooltipEvent.GatherComponents event) {
+        if (tooltipStack.isEmpty()) return;
+        switch (RenderConfig.ITEM_ICON_TYPE.get()) {
+            case LEGENDARY -> addItemIconLegendary(tooltipStack, tooltipElements, event);
+            case OBSCURE -> {
+            }
+            case MODERN_UI, NORMAL -> addItemIconNormal(tooltipStack, tooltipElements, event);
+        }
+    }
+
+    private static void addItemIconNormal(ItemStack tooltipStack, List<Either<FormattedText, TooltipComponent>> tooltipElements, RenderTooltipEvent.GatherComponents event) {
         Component stackName;
         if (tooltipElements.get(0).left().isPresent()) {
             stackName = (Component) tooltipElements.get(0).left().get();
@@ -73,37 +109,33 @@ public final class ItemTooltipEvent {
                 scale = tooltipSeconds < 0.25 ? (float) ((1.0F - Math.pow((1.0F - tooltipSeconds * 4.0F), 3.0)) * 1.5F) : (tooltipSeconds < 0.5 ? 1.5F - (1.0F - (float) Math.pow((1.0F - (tooltipSeconds - 0.25F) * 4.0F), 3.0)) * 0.25F : 1.25F);
             }
         }
+
         tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.DEFAULT_HEIGHT)));
-//        tooltipElements.add(1, Either.left(Component.empty()));
     }
 
-    /* LineTooltipComponent */
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void addLineComponentTooltip(RenderTooltipEvent.GatherComponents event) {
-        ItemStack tooltipStack = event.getItemStack();
-        List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
-        if (tooltipElements.size() <= 1) return;
-        Minecraft mc = Minecraft.getInstance();
-        Font font = mc.font;
-        int guiScaledWidth = mc.getWindow().getGuiScaledWidth();
-        int width = 0, height = 0;
-        for (ClientTooltipComponent clientTooltipComponent : gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth)) {
-            width = Math.max(width, clientTooltipComponent.getWidth(font));
-            height += clientTooltipComponent.getHeight();
-        }
-
-        if (tooltipStack.getItem() instanceof Equipable equipable) {
-
-            if (height <= ArmorTooltipRenderer.HEIGHT) {
-                tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
-                tooltipElements.add(Either.right(new ArmorTooltipComponent(tooltipStack, height / 2, ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN, 0, width + (height / 2), 0)));
-            } else {
-                tooltipElements.add(1, Either.right(new LineTooltipComponent(ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN)));
-                tooltipElements.add(Either.right(new ArmorTooltipComponent(tooltipStack, ArmorTooltipRenderer.DEFAULT_SIZE, ArmorTooltipRenderer.WIDTH + width + ArmorTooltipRenderer.MARGIN, 0, width + ArmorTooltipRenderer.WIDTH / 2, (ArmorTooltipRenderer.HEIGHT - height) / 2)));
-            }
+    private static void addItemIconLegendary(ItemStack tooltipStack, List<Either<FormattedText, TooltipComponent>> tooltipElements, RenderTooltipEvent.GatherComponents event) {
+        Component stackName;
+        if (tooltipElements.get(0).left().isPresent()) {
+            stackName = (Component) tooltipElements.get(0).left().get();
         } else {
-            tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
+            stackName = tooltipStack.getHoverName();
         }
+
+        float scale = 0;
+        if (isCompare() && ItemStack.matches(comparedStack, tooltipStack)) {
+            scale = 1.25f;
+        } else {
+            if (!ItemStack.matches(lastRenderStack, tooltipStack)) {
+                setLastRenderStack(tooltipStack);
+                lastMillis = System.currentTimeMillis();
+            } else {
+                float tooltipSeconds = (System.currentTimeMillis() - lastMillis) / 1000.0F;
+                scale = tooltipSeconds < 0.25 ? (float) ((1.0F - Math.pow((1.0F - tooltipSeconds * 4.0F), 3.0)) * 1.5F) : (tooltipSeconds < 0.5 ? 1.5F - (1.0F - (float) Math.pow((1.0F - (tooltipSeconds - 0.25F) * 4.0F), 3.0)) * 0.25F : 1.25F);
+            }
+        }
+
+        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.COMPAT_HEIGHT - 1)));
+        tooltipElements.add(1, Either.left(Component.empty()));
     }
 
     private static List<ClientTooltipComponent> gatherTooltipComponents(RenderTooltipEvent.GatherComponents event, Font font, int mouseX, int screenWidth) {

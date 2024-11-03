@@ -6,6 +6,7 @@ import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.IconType;
 import com.wallev.clientbunch.client.tooltip.FoodEffectTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.MobEffectTooltipComponent;
+import com.wallev.clientbunch.config.subconfig.RenderConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
@@ -38,6 +39,8 @@ public final class EffectTooltipEvent {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void addFoodEffectTooltip(RenderTooltipEvent.GatherComponents event) {
+        if (!RenderConfig.FOOD_EFFECT.get()) return;
+
         ItemStack itemStack = event.getItemStack();
 
         List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();

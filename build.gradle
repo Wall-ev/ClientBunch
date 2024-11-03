@@ -239,7 +239,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:iceberg-520110:5838149")
     implementation fg.deobf("curse.maven:prism-lib-638111:4650325")
-    compileOnly fg.deobf("curse.maven:legendary-tooltips-532127:4662781")
+    implementation fg.deobf("curse.maven:legendary-tooltips-532127:4662781")
 
 
 
@@ -258,7 +258,7 @@ dependencies {
 
 
     // rei
-    runtimeOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
     implementation fg.deobf("curse.maven:architectury-api-419699:${architectury_api_id}")
     implementation fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rei_version}")
 

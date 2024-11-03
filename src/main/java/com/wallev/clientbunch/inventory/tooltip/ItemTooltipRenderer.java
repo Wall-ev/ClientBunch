@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public class ItemTooltipRenderer implements ClientTooltipComponent {
-    public static final int DEFAULT_HEIGHT = 20 + 2 + 2 +2;
+    public static final int DEFAULT_HEIGHT = 20 + 2 + 2 + 2;
     public static final int COMPAT_HEIGHT = DEFAULT_HEIGHT - Minecraft.getInstance().font.lineHeight - 1;
     private final ItemStack stack;
     private final Component name;

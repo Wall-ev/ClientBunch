@@ -3,6 +3,7 @@ package com.wallev.clientbunch.client.event;
 import com.mojang.datafixers.util.Either;
 import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.tooltip.FoodTooltipComponent;
+import com.wallev.clientbunch.config.subconfig.RenderConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +28,7 @@ import java.util.List;
 public final class FoodTooltipEvent {
     @SubscribeEvent
     public void gatherTooltips(RenderTooltipEvent.GatherComponents event) {
+        if (!RenderConfig.FOOD_EFFECT.get()) return;
         if (true) {
 //            return;
         }
