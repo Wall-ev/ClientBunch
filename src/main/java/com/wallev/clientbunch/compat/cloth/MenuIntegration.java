@@ -44,6 +44,9 @@ public class MenuIntegration {
         render.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.client_bunch.render.food_effect"), RenderConfig.FOOD_EFFECT.get())
                 .setDefaultValue(RenderConfig.FOOD_EFFECT.getDefault()).setTooltip(Component.translatable("config.client_bunch.render.food_effect.tooltip"), addition)
                 .setSaveConsumer(RenderConfig.FOOD_EFFECT::set).build());
+        render.addEntry(entryBuilder.startStrList(Component.translatable("config.client_bunch.render.food_effect_icon_black_regex"), RenderConfig.FOOD_EFFECT_ICON_BLACK_REGEX.get())
+                .setDefaultValue(RenderConfig.FOOD_EFFECT_ICON_BLACK_REGEX.getDefault()).setTooltip(Component.translatable("config.client_bunch.render.food_effect_icon_black_regex.tooltip"), addition)
+                .setSaveConsumer(RenderConfig.FOOD_EFFECT_ICON_BLACK_REGEX::set).build());
         render.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.client_bunch.render.food_value"), RenderConfig.FOOD_VALUE.get())
                 .setDefaultValue(RenderConfig.FOOD_VALUE.getDefault()).setTooltip(Component.translatable("config.client_bunch.render.food_value.tooltip"), addition)
                 .setSaveConsumer(RenderConfig.FOOD_VALUE::set).build());

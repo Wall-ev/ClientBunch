@@ -4,12 +4,12 @@ import com.mojang.datafixers.util.Either;
 import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.tooltip.ArmorTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
+import com.wallev.clientbunch.compat.legendary.LegendaryCompat;
 import com.wallev.clientbunch.config.subconfig.RenderConfig;
 import com.wallev.clientbunch.handler.ItemType;
 import com.wallev.clientbunch.inventory.tooltip.ArmorTooltipRenderer;
 import com.wallev.clientbunch.inventory.tooltip.ItemTooltipRenderer;
 import com.wallev.clientbunch.util.MouseHandlerUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -17,7 +17,6 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
@@ -136,6 +135,8 @@ public final class ItemTooltipEvent {
 
         tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.COMPAT_HEIGHT - 1)));
         tooltipElements.add(1, Either.left(Component.empty()));
+
+        LegendaryCompat.fixTitleBreak(tooltipElements);
     }
 
     private static List<ClientTooltipComponent> gatherTooltipComponents(RenderTooltipEvent.GatherComponents event, Font font, int mouseX, int screenWidth) {

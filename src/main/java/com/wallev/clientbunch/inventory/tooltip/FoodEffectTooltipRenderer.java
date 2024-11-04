@@ -1,6 +1,7 @@
 package com.wallev.clientbunch.inventory.tooltip;
 
 import com.mojang.datafixers.util.Pair;
+import com.wallev.clientbunch.client.event.EffectTooltipEvent;
 import com.wallev.clientbunch.client.tooltip.FoodEffectTooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -33,7 +34,13 @@ public class FoodEffectTooltipRenderer implements ClientTooltipComponent {
   public int getWidth(@NotNull Font font) {
     int width = 0;
     for (int i = 0; i < component.effects().size(); i++) {
-      width = Math.max(width, font.width(getEffectDescription(component.effects().get(i))) + 12);
+      MobEffectInstance effect = component.effects().get(i).getFirst();
+      String descriptionId = effect.getDescriptionId();
+      if (EffectTooltipEvent.isBlacklisted(descriptionId)) {
+        width = Math.max(width, font.width(getEffectDescription(component.effects().get(i))));
+      } else {
+        width = Math.max(width, font.width(getEffectDescription(component.effects().get(i))) + 12);
+      }
     }
     return width;
   }
@@ -45,6 +52,10 @@ public class FoodEffectTooltipRenderer implements ClientTooltipComponent {
 //    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     for (int i = 0; i < component.effects().size(); i++) {
       MobEffectInstance effect = component.effects().get(i).getFirst();
+      String descriptionId = effect.getDescriptionId();
+      if (EffectTooltipEvent.isBlacklisted(descriptionId)) {
+          continue;
+      }
       renderEffectIcon(x, y + getSpacing() * i, graphics, minecraft, effect);
     }
   }
@@ -62,8 +73,14 @@ public class FoodEffectTooltipRenderer implements ClientTooltipComponent {
       @NotNull Font font, int x, int y, @NotNull Matrix4f matrix, @NotNull BufferSource buffer) {
     int color = 0xAABBCC;
     for (int i = 0; i < component.effects().size(); i++) {
-      Component description = getEffectDescription(component.effects().get(i));
-      int textX = x + 12;
+      Pair<MobEffectInstance, Float> mobEffectInstanceFloatPair = component.effects().get(i);
+      MobEffectInstance effect = mobEffectInstanceFloatPair.getFirst();
+      String descriptionId = effect.getDescriptionId();
+      Component description = getEffectDescription(mobEffectInstanceFloatPair);
+      int textX = x;
+      if (!EffectTooltipEvent.isBlacklisted(descriptionId)) {
+        textX += 12;
+      }
       int textY = y + 1 + getSpacing() * i;
       Font.DisplayMode mode = Font.DisplayMode.NORMAL;
       font.drawInBatch(description, textX, textY, color, true, matrix, buffer, mode, 0, 15728880);

@@ -89,9 +89,20 @@ public final class EffectTooltipEvent {
         } else {
             for (Map.Entry<Integer, MutableComponent> entry : integerFormattedTextHashMap.entrySet()) {
                 MutableComponent value = entry.getValue();
-                tooltipElements.set(entry.getKey(), Either.right(new MobEffectTooltipComponent(getEffectMobEffect(getEffectKey(value.toString())), value)));
+                String effectKey = getEffectKey(value.toString());
+                boolean blacklisted = isBlacklisted(effectKey);
+                tooltipElements.set(entry.getKey(), Either.right(new MobEffectTooltipComponent(getEffectMobEffect(effectKey), value, !blacklisted)));
             }
         }
+    }
+
+    public static boolean isBlacklisted(String effectKey) {
+        for (String s : RenderConfig.FOOD_EFFECT_ICON_BLACK_REGEX.get()) {
+            if (!Pattern.compile(s).matcher(effectKey).results().toList().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Nullable

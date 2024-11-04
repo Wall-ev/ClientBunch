@@ -50,9 +50,17 @@ public class MobEffectTooltipRenderer implements ClientTooltipComponent {
             }
 
             int offsetX = mc.font.width(CommonComponents.SPACE.getString().repeat(spaceCount));
-            return new int[]{offsetX, offsetX + 10 - a1};
+            if (effectTooltipComponent.renderIcon()) {
+                return new int[]{offsetX, offsetX + 10 - a1};
+            } else {
+                return new int[]{offsetX, offsetX - a1};
+            }
         } else {
-            return new int[]{0, 10};
+            if (effectTooltipComponent.renderIcon()) {
+                return new int[]{0, 10};
+            } else {
+                return new int[]{0, 0};
+            }
         }
     }
 
@@ -71,6 +79,7 @@ public class MobEffectTooltipRenderer implements ClientTooltipComponent {
         Minecraft minecraft = Minecraft.getInstance();
 //        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 //        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        if (!effectTooltipComponent.renderIcon()) return;
         renderEffectIcon(x + imageOffsetX, y + 1, graphics, minecraft, effectTooltipComponent.mobEffect());
     }
 
