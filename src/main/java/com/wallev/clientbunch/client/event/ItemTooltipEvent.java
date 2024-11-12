@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.tooltip.ArmorTooltipComponent;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
+import com.wallev.clientbunch.client.tooltip.LineTooltipComponent;
 import com.wallev.clientbunch.compat.legendary.LegendaryCompat;
 import com.wallev.clientbunch.config.subconfig.RenderConfig;
 import com.wallev.clientbunch.handler.ItemType;
@@ -110,6 +111,16 @@ public final class ItemTooltipEvent {
         }
 
         tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.DEFAULT_HEIGHT)));
+
+        Minecraft mc = Minecraft.getInstance();
+        Font font = mc.font;
+        int guiScaledWidth = mc.getWindow().getGuiScaledWidth();
+        int width = 0, height = 0;
+        for (ClientTooltipComponent clientTooltipComponent : gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth)) {
+            width = Math.max(width, clientTooltipComponent.getWidth(font));
+            height += clientTooltipComponent.getHeight();
+        }
+        tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
     }
 
     private static void addItemIconLegendary(ItemStack tooltipStack, List<Either<FormattedText, TooltipComponent>> tooltipElements, RenderTooltipEvent.GatherComponents event) {
