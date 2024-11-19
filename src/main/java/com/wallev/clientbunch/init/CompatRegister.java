@@ -2,6 +2,7 @@ package com.wallev.clientbunch.init;
 
 import com.wallev.clientbunch.ClientBunch;
 import com.wallev.clientbunch.client.event.FoodTooltipEvent;
+import com.wallev.clientbunch.client.event.PatchouliScreenEvent;
 import com.wallev.clientbunch.compat.cloth.ClothCompat;
 import com.wallev.clientbunch.config.subconfig.RenderConfig;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,7 +27,12 @@ public final class CompatRegister {
                 MinecraftForge.EVENT_BUS.register(new FoodTooltipEvent());
             }
         });
-        event.enqueueWork(() -> autoBindItemIconType());
+        event.enqueueWork(() -> {
+            if (FMLEnvironment.dist == Dist.CLIENT && ModList.get().isLoaded("patchouli")) {
+                MinecraftForge.EVENT_BUS.register(new PatchouliScreenEvent());
+            }
+        });
+        event.enqueueWork(CompatRegister::autoBindItemIconType);
     }
 
     private static void autoBindItemIconType() {
