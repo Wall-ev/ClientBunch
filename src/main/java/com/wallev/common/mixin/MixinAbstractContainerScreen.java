@@ -1,4 +1,4 @@
-package com.wallev.clientbunch.mixin;
+package com.wallev.common.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wallev.clientbunch.client.event.ItemTooltipEvent;

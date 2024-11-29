@@ -2,7 +2,6 @@ package com.wallev.clientbunch;
 
 import com.wallev.clientbunch.compat.l2screentracker.FoodBookAccessAction;
 import com.wallev.clientbunch.config.GeneralConfig;
-import dev.xkmc.l2backpack.compat.PatchouliClickListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -19,6 +18,8 @@ public final class ClientBunch {
     public ClientBunch() {
         initConfigureRegister();
         regisgerSolFood();
+
+        modInit();
     }
 
     private static void initConfigureRegister() {
@@ -30,5 +31,8 @@ public final class ClientBunch {
             new FoodBookAccessAction();
             MinecraftForge.EVENT_BUS.register(FoodBookAccessAction.class);
         }
+    }
+
+    private static void modInit() {
     }
 }

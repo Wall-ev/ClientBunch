@@ -231,8 +231,8 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:kiwi-303657:${kiwi_file_id}")
 
 //    implementation fg.deobf("curse.maven:quark-243121:${quark_file_id}")
-    runtimeOnly fg.deobf("curse.maven:quark-243121:5594847")
-    runtimeOnly fg.deobf("curse.maven:zeta-968868:5597406")
+    implementation fg.deobf("curse.maven:quark-243121:5594847")
+    implementation fg.deobf("curse.maven:zeta-968868:5597406")
     //    implementation fg.deobf("curse.maven:citadel-331936:${citadel_file_id}")
 
     implementation fg.deobf("curse.maven:farmers-delight-398521:${farmers_delight_file_id}")
@@ -312,6 +312,11 @@ dependencies {
 
     implementation fg.deobf("curse.maven:spice-of-life-carrot-edition-277616:4888575")
     implementation fg.deobf("curse.maven:spice-of-life-apple-pie-edition-704584:4596285")
+
+
+    implementation fg.deobf("curse.maven:sophisticated-core-618298:5935142")
+    implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:5927505")
+    implementation fg.deobf("curse.maven:sophisticated-storage-619320:5909336")
 
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
