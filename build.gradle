@@ -255,8 +255,9 @@ dependencies {
     implementation fg.deobf("curse.maven:puzzles-lib-495476:5783607")
     implementation fg.deobf("curse.maven:new-effect-descriptions-891326:4706348")
 
-    implementation fg.deobf("maven.modrinth:smooth-swapping-forge-updated:0.9.2")
+    compileOnly fg.deobf("maven.modrinth:smooth-swapping-forge-updated:0.9.2")
 
+    implementation fg.deobf("curse.maven:toms-storage-378609:5548573")
 
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")
 //    implementation fg.deobf("maven.modrinth:appleskin:xcauwnEB")
@@ -314,9 +315,9 @@ dependencies {
     implementation fg.deobf("curse.maven:spice-of-life-apple-pie-edition-704584:4596285")
 
 
-    implementation fg.deobf("curse.maven:sophisticated-core-618298:5935142")
-    implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:5927505")
-    implementation fg.deobf("curse.maven:sophisticated-storage-619320:5909336")
+    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5935142")
+    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5927505")
+    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5909336")
 
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
