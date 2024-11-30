@@ -276,7 +276,7 @@ dependencies {
     implementation fg.deobf("curse.maven:do-api-864599:${do_api_file_id}")
 //    implementation fg.deobf("curse.maven:fruit-stack-900231:4807247")
 
-    compileOnly fg.deobf("curse.maven:obscure-tooltips-715660:4686579")
+    implementation fg.deobf("curse.maven:obscure-tooltips-715660:4686579")
     implementation fg.deobf("curse.maven:modern-ui-352491:5724639")
 
     implementation fg.deobf("curse.maven:iceberg-520110:5838149")
@@ -330,12 +330,12 @@ dependencies {
     // rei
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
     implementation fg.deobf("curse.maven:architectury-api-419699:${architectury_api_id}")
-    implementation fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rei_version}")
+    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rei_version}")
 
     // emi
     // Forge (see below block as well if you use Forge Gradle)
-    compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}:api")
-    compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}")
+    implementation fg.deobf("dev.emi:emi-forge:${emi_version}:api")
+    implementation fg.deobf("dev.emi:emi-forge:${emi_version}")
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

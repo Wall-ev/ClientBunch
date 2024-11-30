@@ -1,6 +1,8 @@
 package com.wallev.clientbunch.inventory.tooltip;
 
+import com.obscuria.tooltips.client.renderer.TooltipContext;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
+import com.wallev.common.handler.ObsTooltipRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -46,17 +48,21 @@ public class ItemTooltipRenderer implements ClientTooltipComponent {
         graphics.fillGradient(x + 2 + 20, y + 2, x + 2 + 20 + 1, y + 2 + 20, color, color);
         graphics.fillGradient(x + 2, y + 2 + 20, x + 2 + 20, y + 2 + 20 + 1, color, color);
         graphics.fillGradient(x + 1, y + 2, x + 2, y + 2 + 20, color, color);
+//
 
-        graphics.pose().pushPose();
-//        graphics.pose().translate(x, y, 500.0F);
+        TooltipContext tooltipContext = new TooltipContext(graphics);
+        ObsTooltipRenderer.render(tooltipContext, this.stack, x, y);
+
+//        graphics.pose().pushPose();
+////        graphics.pose().translate(x, y, 500.0F);
+////        graphics.pose().scale(scale, scale, scale);
+////        graphics.renderItem(stack, 2, 2);
+//
+//        graphics.pose().translate(x + 12, y + 12, 500.0F);
 //        graphics.pose().scale(scale, scale, scale);
-//        graphics.renderItem(stack, 2, 2);
-
-        graphics.pose().translate(x + 12, y + 12, 500.0F);
-        graphics.pose().scale(scale, scale, scale);
-        graphics.renderItem(stack, -8, -8);
-
-        graphics.pose().popPose();
+//        graphics.renderItem(stack, -8, -8);
+//
+//        graphics.pose().popPose();
     }
 
     @Override

@@ -5,12 +5,14 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "client_bunch.refmap.json",
   "mixins": [
+    "obst.MixinResourceLoader"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "MixinAbstractContainerScreen",
-    "MixinStorageScreenBase"
+    "mc.MixinAbstractContainerScreen",
+    "toms.MixinStorageScreenBase",
+    "obst.MixinTooltipRenderer"
   ]
 }

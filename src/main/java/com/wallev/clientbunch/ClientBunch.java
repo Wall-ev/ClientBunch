@@ -17,7 +17,7 @@ public final class ClientBunch {
 
     public ClientBunch() {
         initConfigureRegister();
-        regisgerSolFood();
+        registerSolFood();
 
         modInit();
     }
@@ -26,7 +26,7 @@ public final class ClientBunch {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GeneralConfig.init());
     }
 
-    private static void regisgerSolFood() {
+    private static void registerSolFood() {
         if (ModList.get().isLoaded("solcarrot") || ModList.get().isLoaded("solapplepie")) {
             new FoodBookAccessAction();
             MinecraftForge.EVENT_BUS.register(FoodBookAccessAction.class);

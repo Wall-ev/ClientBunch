@@ -84,6 +84,7 @@ public final class ItemTooltipEvent {
         switch (RenderConfig.ITEM_ICON_TYPE.get()) {
             case LEGENDARY -> addItemIconLegendary(tooltipStack, tooltipElements, event);
             case OBSCURE -> {
+                addItemIconLegendary(tooltipStack, tooltipElements, event);
             }
             case MODERN_UI, NORMAL -> addItemIconNormal(tooltipStack, tooltipElements, event);
         }

@@ -1,4 +1,4 @@
-package com.wallev.common.mixin;
+package com.wallev.common.mixin.toms;
 
 import dev.shwg.smoothswapping.SmoothSwapping;
 import dev.shwg.smoothswapping.SwapStacks;
