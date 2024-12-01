@@ -5,9 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "client_bunch.refmap.json",
   "mixins": [
-//    "emi.EmiPlayerInventoryMixin",
-//    "emi.EmiScreenManagerMixin",
-//    "emi.jei.RecipeTsfManagerMixin",
     "obst.MixinResourceLoader"
   ],
   "injectors": {

@@ -38,7 +38,6 @@ public final class ItemTooltipEvent {
     private static ItemStack comparedStack = ItemStack.EMPTY;
     private static ItemStack lastRenderStack = ItemStack.EMPTY;
     private static long lastMillis = 0;
-
     private ItemTooltipEvent() {
     }
 
