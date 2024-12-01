@@ -1,4 +1,4 @@
-package com.wallev.common.handler;
+package com.wallev.common.handler.obst;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -6,9 +6,12 @@ import com.mojang.math.Axis;
 import com.obscuria.tooltips.client.ResourceLoader;
 import com.obscuria.tooltips.client.StyleManager;
 import com.obscuria.tooltips.client.renderer.TooltipContext;
+import com.obscuria.tooltips.client.style.Effects;
 import com.obscuria.tooltips.client.style.Effects.Order;
 import com.obscuria.tooltips.client.style.TooltipStyle;
 import com.obscuria.tooltips.client.style.TooltipStylePreset;
+import com.obscuria.tooltips.client.style.effect.TooltipEffect;
+import com.obscuria.tooltips.client.style.frame.TooltipFrame;
 import com.wallev.clientbunch.client.event.ItemTooltipEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -32,15 +35,15 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2ic;
 
 import java.awt.*;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber({Dist.CLIENT})
 public final class ObsTooltipRenderer {
     private static @Nullable TooltipStyle renderStyle = null;
+    private static List<TooltipEffect> renderEffects = new ArrayList<>();
+    private static @Nullable TooltipFrame renderFrames= null;
     private static @Nullable ArmorStand renderStand;
     private static ItemStack renderStack;
     private static long tooltipStartMillis;
@@ -56,25 +59,43 @@ public final class ObsTooltipRenderer {
     public ObsTooltipRenderer() {
     }
 
-    public static boolean render(TooltipContext renderer, ItemStack stack, int x, int y) {
+    public static boolean render(TooltipContext renderer, Point point, ItemStack stack, int x, int y) {
         updateStyle(stack);
         if (renderStyle != null) {
             renderer.define(renderStack, tooltipSeconds);
             renderer.pose().pushPose();
             Vec2 pos = new Vec2(x, y);
 
-            // 需要的东西
-            if (true) {
+            // @todo
+            // 背景效果
+            if (false) {
                 renderer.drawManaged(() -> {
-                    renderStyle.renderFront(renderer, pos, POINT_ZERO);
+                    renderEffects(Order.LAYER_3_TEXT$FRAME, renderer, pos, point,renderEffects);
+                    renderer.push(() -> {
+                        renderer.translate(0.0F, 0.0F, -50.F);
+//                        renderFrames.render(renderer, pos, point);
+                    });
+//                    renderEffects(Order.LAYER_5_FRONT, renderer, pos, point, renderEffects);
+//                    renderEffects(Order.LAYER_5_FRONT, renderer, pos, POINT_ZERO, renderEffects);
+//                    renderStyle.renderEffects(Order.LAYER_5_FRONT, renderer, pos, POINT_ZERO);
                 });
             }
 
-            // 粒子效果：珍珠
-            // @todo
+            // 需要的东西
             if (true) {
                 renderer.drawManaged(() -> {
-                    renderStyle.renderEffects(Order.LAYER_5_FRONT, renderer, pos, POINT_ZERO);
+                    renderStyle.renderFront(renderer, pos, point);
+//                    renderStyle.renderFront(renderer, pos, POINT_ZERO);
+                });
+            }
+
+            // @todo
+            // 粒子效果：珍珠
+            if (true) {
+                renderer.drawManaged(() -> {
+//                    renderEffects(Order.LAYER_5_FRONT, renderer, pos, point, renderEffects);
+//                    renderEffects(Order.LAYER_5_FRONT, renderer, pos, POINT_ZERO, renderEffects);
+                    renderStyle.renderEffects(Order.LAYER_5_FRONT, renderer, pos, point);
                 });
             }
 
@@ -84,6 +105,28 @@ public final class ObsTooltipRenderer {
         } else {
             return false;
         }
+    }
+
+    public static void renderEffects(Effects.Order order, TooltipContext renderer, Vec2 pos, Point size, List<TooltipEffect> effects) {
+        renderer.push(() -> {
+            float var10003 = switch (order) {
+                case LAYER_1_BACK -> 0.0F;
+                case LAYER_2_BACK$TEXT -> 100.0F;
+                case LAYER_3_TEXT$FRAME -> 400.0F;
+                case LAYER_4_FRAME$ICON -> 500.0F;
+                case LAYER_5_FRONT -> 1000.0F;
+                default -> throw new IncompatibleClassChangeError();
+            };
+
+            renderer.translate(0.0F, 0.0F, var10003);
+
+            for (TooltipEffect effect : effects) {
+                if (effect.order().equals(order)) {
+                    effect.render(renderer, pos, size);
+                }
+            }
+
+        });
     }
 
 
@@ -295,14 +338,21 @@ public final class ObsTooltipRenderer {
 //            }
 
             if (ItemTooltipEvent.isCompare() || ItemStack.matches(stack, renderStack)) {
+                renderStack = stack;
                 return;
             }
 
             reset();
             renderStack = stack;
             renderStyle = getStyleFor(stack).orElse(null);
+            renderEffects = getStyleEffect(stack);
             if (renderStyle != null) {
                 renderStyle.reset();
+            }
+            if (!renderEffects.isEmpty()) {
+                for (TooltipEffect renderEffect : renderEffects) {
+                    renderEffect.reset();
+                }
             }
         }
 
@@ -313,13 +363,22 @@ public final class ObsTooltipRenderer {
     public static Optional<TooltipStyle> getStyleFor(ItemStack stack) {
         TooltipStylePreset preset = ResourceLoader.getStyleFor(stack).orElse(null);
         return preset == null ? StyleManager.defaultStyle() : Optional.of((new TooltipStyle.Builder())
-                .withPanel(StyleManager.DEFAULT_PANEL)
-                .withFrame(StyleManager.DEFAULT_FRAME)
+                .withPanel(preset.getPanel().orElse(StyleManager.DEFAULT_PANEL))
+                .withFrame(preset.getFrame().orElse(StyleManager.DEFAULT_FRAME))
                 .withIcon(preset.getIcon().orElse(StyleManager.DEFAULT_ICON))
-//                .withIcon(StyleManager.DEFAULT_ICON)
-                .withEffects(Collections.emptyList()).build());
-//                .withEffects(preset.getEffects()).build());
+//                .withEffects(Collections.emptyList()).build());
+                .withEffects(preset.getEffects()).build());
     }
+
+    public static List<TooltipEffect> getStyleEffect(ItemStack stack) {
+        TooltipStylePreset preset = ResourceLoader.getStyleFor(stack).orElse(null);
+        return preset == null ? Collections.emptyList() : preset.getEffects();
+    }
+
+//    public static List<TooltipEffect> getStyleEffect(ItemStack stack) {
+//        TooltipStylePreset preset = ResourceLoader.getStyleFor(stack).orElse(null);
+//        return preset == null ? Collections.emptyList() : preset.getEffects();
+//    }
 
     private static void reset() {
         if (renderStyle != null) {

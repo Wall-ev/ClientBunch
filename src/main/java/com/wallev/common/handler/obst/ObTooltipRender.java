@@ -1,4 +1,4 @@
-package com.wallev.common.handler;
+package com.wallev.common.handler.obst;
 
 import com.obscuria.tooltips.client.renderer.TooltipContext;
 import net.minecraft.client.gui.Font;

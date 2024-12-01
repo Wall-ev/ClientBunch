@@ -27,6 +27,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.awt.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -111,16 +113,19 @@ public final class ItemTooltipEvent {
             }
         }
 
-        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.DEFAULT_HEIGHT)));
-
         Minecraft mc = Minecraft.getInstance();
         Font font = mc.font;
         int guiScaledWidth = mc.getWindow().getGuiScaledWidth();
         int width = 0, height = 0;
-        for (ClientTooltipComponent clientTooltipComponent : gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth)) {
+        List<ClientTooltipComponent> clientTooltipComponents = gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth);
+        for (ClientTooltipComponent clientTooltipComponent : clientTooltipComponents) {
             width = Math.max(width, clientTooltipComponent.getWidth(font));
             height += clientTooltipComponent.getHeight();
         }
+        Component itemGroupName = ItemType.getItemGroupName(tooltipStack);
+        Point point = calculateSize(font, clientTooltipComponents, itemGroupName);
+        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, itemGroupName, scale, ItemTooltipRenderer.DEFAULT_HEIGHT, point)));
+
         tooltipElements.add(1, Either.right(new LineTooltipComponent(width)));
     }
 
@@ -145,7 +150,19 @@ public final class ItemTooltipEvent {
             }
         }
 
-        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, ItemType.getItemGroupName(tooltipStack), scale, ItemTooltipRenderer.COMPAT_HEIGHT - 1)));
+        Minecraft mc = Minecraft.getInstance();
+        Font font = mc.font;
+        int guiScaledWidth = mc.getWindow().getGuiScaledWidth();
+        int width = 0, height = 0;
+        List<ClientTooltipComponent> clientTooltipComponents = gatherTooltipComponents(event, font, MouseHandlerUtil.getMouseX(), guiScaledWidth);
+        for (ClientTooltipComponent clientTooltipComponent : clientTooltipComponents) {
+            width = Math.max(width, clientTooltipComponent.getWidth(font));
+            height += clientTooltipComponent.getHeight();
+        }
+        Component itemGroupName = ItemType.getItemGroupName(tooltipStack);
+        Point point = calculateSize(font, clientTooltipComponents, itemGroupName);
+
+        tooltipElements.set(0, Either.right(new ItemTooltipComponent(tooltipStack, stackName, itemGroupName, scale, ItemTooltipRenderer.COMPAT_HEIGHT - 1, point)));
         tooltipElements.add(1, Either.left(Component.empty()));
 
         LegendaryCompat.fixTitleBreak(tooltipElements);
@@ -220,6 +237,26 @@ public final class ItemTooltipEvent {
         if (!equipped && !comparedStack.isEmpty()) {
             comparedStack = ItemStack.EMPTY;
         }
+    }
+
+    private static Point calculateSize(Font font, List<ClientTooltipComponent> components, Component summaryField) {
+        int width = 26 + components.get(0).getWidth(font);
+        int height = 14;
+
+        for (ClientTooltipComponent component : components) {
+            height += component.getHeight();
+            int componentWidth = component.getWidth(font);
+            if (componentWidth > width) {
+                width = componentWidth;
+            }
+        }
+
+        int SummaryWidth = 26 + font.width(summaryField.getString());
+        if (SummaryWidth > width) {
+            width = SummaryWidth;
+        }
+
+        return new Point(width, height);
     }
 }
 

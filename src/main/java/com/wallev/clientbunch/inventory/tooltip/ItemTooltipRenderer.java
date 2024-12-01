@@ -2,7 +2,7 @@ package com.wallev.clientbunch.inventory.tooltip;
 
 import com.obscuria.tooltips.client.renderer.TooltipContext;
 import com.wallev.clientbunch.client.tooltip.ItemTooltipComponent;
-import com.wallev.common.handler.ObsTooltipRenderer;
+import com.wallev.common.handler.obst.ObsTooltipRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
+import java.awt.*;
+
 public class ItemTooltipRenderer implements ClientTooltipComponent {
     public static final int DEFAULT_HEIGHT = 20 + 2 + 2 + 2;
     public static final int COMPAT_HEIGHT = DEFAULT_HEIGHT - Minecraft.getInstance().font.lineHeight - 1;
@@ -21,6 +23,7 @@ public class ItemTooltipRenderer implements ClientTooltipComponent {
     private final Component secondName;
     private final float scale;
     private final int height;
+    private final Point point;
 
     public ItemTooltipRenderer(ItemTooltipComponent itemTooltipComponent) {
         this.stack = itemTooltipComponent.stack();
@@ -28,6 +31,7 @@ public class ItemTooltipRenderer implements ClientTooltipComponent {
         this.secondName = itemTooltipComponent.secondName();
         this.scale = itemTooltipComponent.scale();
         this.height = itemTooltipComponent.height();
+        this.point = itemTooltipComponent.point();
     }
 
     @Override
@@ -51,7 +55,7 @@ public class ItemTooltipRenderer implements ClientTooltipComponent {
 //
 
         TooltipContext tooltipContext = new TooltipContext(graphics);
-        ObsTooltipRenderer.render(tooltipContext, this.stack, x, y);
+        ObsTooltipRenderer.render(tooltipContext, this.point, this.stack, x, y);
 
 //        graphics.pose().pushPose();
 ////        graphics.pose().translate(x, y, 500.0F);

@@ -5,6 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "client_bunch.refmap.json",
   "mixins": [
+//    "emi.EmiPlayerInventoryMixin",
+//    "emi.EmiScreenManagerMixin",
+//    "emi.jei.RecipeTsfManagerMixin",
     "obst.MixinResourceLoader"
   ],
   "injectors": {
@@ -12,7 +15,7 @@
   },
   "client": [
     "mc.MixinAbstractContainerScreen",
-    "toms.MixinStorageScreenBase",
-    "obst.MixinTooltipRenderer"
+    "obst.MixinTooltipRenderer",
+    "toms.MixinStorageScreenBase"
   ]
 }

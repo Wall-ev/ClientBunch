@@ -1,7 +1,7 @@
 package com.wallev.common.mixin.obst;
 
 import com.obscuria.tooltips.client.ResourceLoader;
-import com.wallev.common.handler.ObsTooltipRenderer;
+import com.wallev.common.handler.obst.ObsTooltipRenderer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

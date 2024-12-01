@@ -2,7 +2,7 @@ package com.wallev.common.mixin.obst;
 
 import com.obscuria.tooltips.client.renderer.TooltipContext;
 import com.obscuria.tooltips.client.renderer.TooltipRenderer;
-import com.wallev.common.handler.ObTooltipRender;
+import com.wallev.common.handler.obst.ObTooltipRender;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
